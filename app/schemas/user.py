@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator
 from typing import Optional
 from datetime import datetime
 
@@ -8,6 +8,16 @@ class UserBase(BaseModel):
     email: EmailStr
     phone: str
     role: Optional[str] = "patient"
+
+    @field_validator("phone")
+    def validate_phone(cls, value):
+        if not value.isdigit():
+            raise ValueError("Phone number must contain only digits")
+
+        if len(value) != 10:
+            raise ValueError("Phone number must be exactly 10 digits")
+
+        return value
 
 
 class UserCreate(UserBase):

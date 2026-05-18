@@ -11,14 +11,14 @@ from alembic import context
 from app.database import Base
 import app.models
 
-# Alembic Config object
+
 config = context.config
 
-# Logging configuration
+
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Metadata for autogenerate
+
 target_metadata = Base.metadata
 
 

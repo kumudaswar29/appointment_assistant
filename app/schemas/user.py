@@ -9,8 +9,20 @@ class UserBase(BaseModel):
     phone: str
     role: Optional[str] = "patient"
 
+    @field_validator("full_name")
+    def validate_full_name(cls, value):
+
+        if not value.strip():
+            raise ValueError("Full Name is required")
+
+        return value
+
     @field_validator("phone")
     def validate_phone(cls, value):
+
+        if not value.strip():
+            raise ValueError("Phone number is required")
+
         if not value.isdigit():
             raise ValueError("Phone number must contain only digits")
 
@@ -19,9 +31,34 @@ class UserBase(BaseModel):
 
         return value
 
+    @field_validator("role")
+    def validate_role(cls, value):
+
+        if not value.strip():
+            raise ValueError("Role is required")
+
+        # Public registration allowed roles only
+        allowed_roles = ["patient", "doctor"]
+
+        if value.lower() not in allowed_roles:
+            raise ValueError("Invalid role")
+
+        return value
+
 
 class UserCreate(UserBase):
     password: str
+
+    @field_validator("password")
+    def validate_password(cls, value):
+
+        if not value.strip():
+            raise ValueError("Password is required")
+
+        if len(value) < 6:
+            raise ValueError("Password must be at least 6 characters long")
+
+        return value
 
 
 class UserLogin(BaseModel):
